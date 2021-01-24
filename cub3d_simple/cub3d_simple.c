@@ -163,21 +163,28 @@ void	fill_raw_map(int i, char *line, t_param *p)
 	int	j;
 
 	j = 0;
+	//printf("C\n");
+	//printf("line[j]: %c\n", line[j]);
 	while (line[j])
 	{
+		//printf("line[j]: %c\n", line[j]);
+		//printf("1-p->map[i][j]: %c\n", p->map[i][j]);
 		if (line[j] == ' ')
 			p->map[i][j] = '4';
 		else
 			p->map[i][j] = line[j];
+		//printf("2-p->map[i][j]: %c\n", p->map[i][j]);
 		j++;
 	}
+	//printf("D\n");
 	while (j < p->nb_col_map)
 	{
 		p->map[i][j] = '4';
 		j++;
 	}
+	//printf("E\n");
 	p->map[i][j] = '\0';
-	printf("line_map: %s\n", p->map[i]);
+	//printf("line_map: %s\n", p->map[i]);
 }
 
 void	get_map(char *filename, t_param *p, int fd)
@@ -190,33 +197,35 @@ void	get_map(char *filename, t_param *p, int fd)
 	i = 0;
 	init_map(p);
 	p->token = 0;
+	printf("fd; %d\n", fd);
 	//fd2 = fd + 1;
 	//openat(fd2, filename, O_RDONLY);
 	fd2 = open(filename, O_RDONLY);
-	r = get_next_line(fd2, &line, p);
-	while (r > 0)
+	//r = get_next_line(fd2, &line, p);
+	while ((r = get_next_line(fd2, &line, p)) > 0)
 	{
 		printf("A\n");
 		if (ft_strstr(line, "01") == -1 && p->token == 1)
 			break ;
-		printf("i1: %d\n", i);
-		printf("line1: %s\n", line);
+		//printf("i1: %d\n", i);
+		printf("line2: %s\n", line);
 		if (ft_strstr(line, "01") > -1 && ft_strstr(line, "RFC") == -1
 			&& p->token == 0)
 			p->token = 1;
+		printf("B\n");
 		if (ft_strstr(line, "01") > -1 && ft_strstr(line, "RFC") == -1
 			&& p->token == 1)
 		{
-			printf("i: %d\nline_raw: %s\n", i, line);
+			//printf("i: %d\nline_raw: %s\n", i, line);
 			fill_raw_map(i, line, p);
 			i++;
 		}
 
 		free(line);
-		r = get_next_line(fd, &line, p);
-		printf("r2: %d\n", r);
-		printf("i1: %d\n", i);
-		printf("line2: %s\n", line);
+		//r = get_next_line(fd, &line, p);
+		//printf("r2: %d\n", r);
+		//printf("i1: %d\n", i);
+		//printf("line2: %s\n", line);
 	}
 	free(line);
 	close(fd2);
@@ -232,10 +241,10 @@ void	get_param(char *filename, t_param *p)
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		ft_error("Error\n File not found.\n", p);
-	r = get_next_line(fd, &line, p);
 	i = 0;
-	while (r > 0)
+	while ((r = get_next_line(fd, &line, p)) > 0)
 	{
+		printf("line1: %s\n", line);
 		if (ft_strstr(line, "01") == -1 && p->token == 1)
 			break ;
 		if (ft_strstr(line, "01") > -1 && ft_strstr(line, "RFC") == -1
@@ -247,17 +256,14 @@ void	get_param(char *filename, t_param *p)
 		if (ft_strstr(line, "01") > -1 && p->token == 1)
 			get_size_map(line, p);
 		i++;
-
 		free(line);
-		r = get_next_line(fd, &line, p);
-		printf("line1: %s\n", line);
 	}
 	free(line);
 
 	printf("\nnb_line_map: %d\n", p->nb_line_map);
 	printf("nb_col_map: %d\n", p->nb_col_map);
-	get_map(filename, p, fd);
 	close(fd);
+	get_map(filename, p, fd);
 }
 
 void	check_map(t_param *p)
@@ -275,7 +281,7 @@ void	check_map(t_param *p)
 void	parse_file(char *filename, t_param *p)
 {
 	get_param(filename, p);
-	//check_map(p);
+	check_map(p);
 
 }
 
