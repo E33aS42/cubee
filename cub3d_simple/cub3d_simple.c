@@ -202,7 +202,7 @@ void	get_map(char *filename, t_param *p, int fd)
 	//openat(fd2, filename, O_RDONLY);
 	fd2 = open(filename, O_RDONLY);
 	//r = get_next_line(fd2, &line, p);
-	while ((r = get_next_line(fd2, &line, p)) > 0)
+	while ((r = get_next_line(fd2, &line, p, NO_CLEAN_BUFFER)) > 0)
 	{
 		printf("A\n");
 		if (ft_strstr(line, "01") == -1 && p->token == 1)
@@ -236,28 +236,25 @@ void	get_param(char *filename, t_param *p)
 	int		fd;
 	int		r;
 	char	*line;
-	int	i;
 
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		ft_error("Error\n File not found.\n", p);
-	i = 0;
-	while ((r = get_next_line(fd, &line, p)) > 0)
+	r = get_next_line(fd, &line, p, NO_CLEAN_BUFFER);
+	while ((r = get_next_line(fd, &line, p, NO_CLEAN_BUFFER)) > 0)
 	{
 		printf("line1: %s\n", line);
 		if (ft_strstr(line, "01") == -1 && p->token == 1)
 			break ;
 		if (ft_strstr(line, "01") > -1 && ft_strstr(line, "RFC") == -1
 			&& p->token == 0)
-		{
-			p->i2 = i;
 			p->token = 1;
-		}
 		if (ft_strstr(line, "01") > -1 && p->token == 1)
 			get_size_map(line, p);
-		i++;
 		free(line);
+		//r = get_next_line(fd, &line, p, NO_CLEAN_BUFFER);
 	}
+	get_next_line(fd, &line, p, CLEAN_BUFFER);
 	free(line);
 
 	printf("\nnb_line_map: %d\n", p->nb_line_map);

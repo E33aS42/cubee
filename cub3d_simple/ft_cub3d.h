@@ -16,7 +16,9 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <stdio.h>
-# define BUFFER_SIZE	4096
+# define BUFFER_SIZE		10
+# define CLEAN_BUFFER		1
+# define NO_CLEAN_BUFFER	0
 
 
 typedef struct		s_textures
@@ -93,7 +95,7 @@ void	ft_init(t_param *p);
 void	ft_init_2(t_param *p);
 int	check_save(char *s);
 int	check_map_name(char *s);
-int	get_next_line(int fd, char **line, t_param *p);
+int	get_next_line(int fd, char **line, t_param *p, int clean_buf);
 int	ft_strchr(char *str, int c);
 int	ft_strstr(char *s1, char *s2);
 char	*ft_strjoin(char *s1, char *s2);
