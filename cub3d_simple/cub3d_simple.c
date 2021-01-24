@@ -252,7 +252,7 @@ void	get_param(char *filename, t_param *p)
 		if (ft_strstr(line, "01") > -1 && p->token == 1)
 			get_size_map(line, p);
 		free(line);
-		//r = get_next_line(fd, &line, p, NO_CLEAN_BUFFER);
+		r = get_next_line(fd, &line, p, NO_CLEAN_BUFFER);
 	}
 	get_next_line(fd, &line, p, CLEAN_BUFFER);
 	free(line);
