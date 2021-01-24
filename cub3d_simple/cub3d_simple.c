@@ -241,7 +241,7 @@ void	get_param(char *filename, t_param *p)
 	if (fd < 0)
 		ft_error("Error\n File not found.\n", p);
 	r = get_next_line(fd, &line, p, NO_CLEAN_BUFFER);
-	while ((r = get_next_line(fd, &line, p, NO_CLEAN_BUFFER)) > 0)
+	while (r > 0)
 	{
 		printf("line1: %s\n", line);
 		if (ft_strstr(line, "01") == -1 && p->token == 1)
