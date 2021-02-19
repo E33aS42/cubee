@@ -12,7 +12,7 @@
 
 #include "ft_cub3d.h"
 
-int	ft_strlen(char *s)
+int	ft_strlen(char *s) //		printf("A\n");
 {
 	int	i;
 
@@ -62,7 +62,6 @@ char	*ft_strjoin(char *s1, char *s2)
 		i++;
 	}
 	res[i] = '\0';
-	free(s1);
 	return (res);
 }
 
@@ -70,8 +69,10 @@ char	*ft_strdup(char *s)
 {
 	char	*dupl;
 	int		i;
+	int		len;
 
-	dupl = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
+	len = ft_strlen(s);
+	dupl = (char *)malloc(sizeof(char) * (len + 1));
 	if (!(dupl))
 		return (NULL);
 	i = 0;

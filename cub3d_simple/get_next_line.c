@@ -30,6 +30,7 @@ static int	new_line(char **line, char **dest, t_param *p)
 	char	*tmp;
 
 	len = 0;
+	tmp = NULL;
 	while ((*dest)[len] != '\n' && (*dest)[len] != '\0')
 		len++;
 	if ((*dest)[len] == '\0')
@@ -57,54 +58,41 @@ static int	next_line(char **line, char **dest, int nb, t_param *p)
 	if (nb == 0 && (*dest == NULL))
 	{
 		if (!(*line == (char *)malloc(sizeof(char))))
-			return (free_str(dest, -1, p));
+			return (0);
 		(*line)[0] = '\0';
 		return (free_str(dest, 0, p));
 	}
 	return (new_line(line, dest, p));
 }
 
-int	get_next_line(int fd, char **line, t_param *p, int clean_buf)
+int	get_next_line(int fd, char **line, t_param *p)
 {
-	char	buf[BUFFER_SIZE + 1];
+	char		buf[BUFFER_SIZE + 1];
+	char		*tmp;
 	static char	*dest;
 	ssize_t		nb;
-	int		i;
 
-	i = 0;
-	//if (!(buf = (char*)malloc(sizeof(char) * (BUFFER_SIZE + 1))))
-	//	return (free_str(&dest, -1, p));
-	if (clean_buf)
-	{
-		while (i < BUFFER_SIZE + 1)
-		{
-			dest[i] = '\0';
-			i++;
-		}
-		printf("clean_buf");
-		return (0);
-	}
 	if (line == NULL || fd < 0)
 		return (free_str(&dest, -1, p));
-	i = 0;
-	while (i < BUFFER_SIZE + 1)
-	{
-		buf[i] = '\0';
-		i++;
-	}
+	//buf = (char*)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	//nb = read(fd, buf, BUFFER_SIZE);
 	while ((nb = read(fd, buf, BUFFER_SIZE)) > 0)
-	//while(ft_strchr(dest, '\n') == -1)
 	{
-		//nb = read(fd, buf, BUFFER_SIZE);
-		//printf("nb: %zd\n", nb);
-		//buf[nb] = '\0';
+		buf[nb] = '\0';
 		if (dest == NULL)
 		{
 			if (!(dest = ft_strdup(buf)))
-				return (free_str(&dest, -1, p));
+				return (free_str(&(dest), -1, p));
 		}
-		else if (!(dest = ft_strjoin(dest, buf)))
-			return (free_str(&dest, -1, p));
+		else
+		{
+			tmp = ft_strjoin(dest, buf);
+			free(dest);
+			dest = tmp;
+		}
+		if (ft_strchr(dest, '\n') != -1)
+			break ;
+		//nb = read(fd, buf, BUFFER_SIZE);
 	}
 	//free(buf);
 	return (next_line(line, &dest, nb, p));
